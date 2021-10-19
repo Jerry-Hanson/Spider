@@ -1,0 +1,9 @@
+# default dir is ../
+DOWNLOADER_MIDDLEWARES :
+  middlewares.ScrapydemoDownloaderMiddleware : 543
+ITEM_PIPELINES :
+  pipelines.ScrapydemoPipeline : 300
+LOG_LEVEL : INFO
+CONCURRENT_REQUESTS : 16  # 设置多线程， 但是太多了就没有效果了
+# LOG_STDOUT : true  # 日志信息重定向
+# LOG_FILE :   # 日志输出文件

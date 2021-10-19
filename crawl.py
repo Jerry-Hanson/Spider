@@ -3,27 +3,29 @@ from scrapy.settings import Settings
 import time
 import random
 import logging
-# from ScrapyDemo.items import ScrapydemoItem
+from ConfigReader import ConfigReader
 from items import ScrapydemoItem
 from middlewares import ScrapydemoDownloaderMiddleware
 from pipelines import ScrapydemoPipeline
 from scrapy.crawler import CrawlerProcess
+
 rand_time = [0.1, 0.2, 0.5, 0.3]
 
-values = {
-        "DOWNLOADER_MIDDLEWARES": {
-            ScrapydemoDownloaderMiddleware : 543
-        },
-        # "LOG_FILE" : "./log/{}.log".format(time.time()),
-        # "LOG_STDOUT" : True,  # 将log重定向到文件中
-        "ITEM_PIPELINES" : {
-            ScrapydemoPipeline : 300
-        },
-        "LOG_LEVEL": "INFO",
-        "CONCURRENT_REQUESTS" : 16  # 这个设置并发数，但是效果好像不是很明显
-}
-
-settings = Settings(values)
+# values = {
+#         "DOWNLOADER_MIDDLEWARES": {
+#             ScrapydemoDownloaderMiddleware : 543
+#         },
+#         # "LOG_FILE" : "./log/{}.log".format(time.time()),
+#         # "LOG_STDOUT" : True,  # 将log重定向到文件中
+#         "ITEM_PIPELINES" : {
+#             ScrapydemoPipeline : 300
+#         },
+#         "LOG_LEVEL": "INFO",
+#         "CONCURRENT_REQUESTS" : 16  # 这个设置并发数，但是效果好像不是很明显
+# }
+config = ConfigReader('config/settings.yaml',
+                      ["DOWNLOADER_MIDDLEWARES", "ITEM_PIPELINES"]).get_item()
+settings = Settings(config)
 
 
 class MainSpider(scrapy.Spider):
@@ -44,8 +46,8 @@ class MainSpider(scrapy.Spider):
         # log
         self.logger.info("最大能爬取到%d页", self.max_page)
 
-        yield scrapy.Request(url = self.start_urls[0],
-                             callback = self.ParseMain)
+        yield scrapy.Request(url=self.start_urls[0],
+                             callback=self.ParseMain)
 
     def ParseMain(self, response):
         # 解析起始页
@@ -82,7 +84,7 @@ class MainSpider(scrapy.Spider):
             self.logger.error("已经爬到最大页数")
             exit(-1)
 
-        yield scrapy.Request(url = self.base_url.format(self.cur_page),
+        yield scrapy.Request(url=self.base_url.format(self.cur_page),
                              callback=self.ParseMain)
 
     def ParseDetail(self, response):
@@ -98,6 +100,7 @@ class MainSpider(scrapy.Spider):
         item['article'] = article
 
         yield item
+
 
 if __name__ == "__main__":
     runner = CrawlerProcess(settings)

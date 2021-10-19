@@ -1,7 +1,4 @@
 import yaml
-from middlewares import ScrapydemoDownloaderMiddleware
-from items import *
-from pipelines import *
 
 class ConfigReader:
     def __init__(self, path, instance_list=None):

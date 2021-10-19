@@ -5,24 +5,10 @@ import random
 import logging
 from ConfigReader import ConfigReader
 from items import ScrapydemoItem
-from middlewares import ScrapydemoDownloaderMiddleware
-from pipelines import ScrapydemoPipeline
 from scrapy.crawler import CrawlerProcess
 
 rand_time = [0.1, 0.2, 0.5, 0.3]
 
-# values = {
-#         "DOWNLOADER_MIDDLEWARES": {
-#             ScrapydemoDownloaderMiddleware : 543
-#         },
-#         # "LOG_FILE" : "./log/{}.log".format(time.time()),
-#         # "LOG_STDOUT" : True,  # 将log重定向到文件中
-#         "ITEM_PIPELINES" : {
-#             ScrapydemoPipeline : 300
-#         },
-#         "LOG_LEVEL": "INFO",
-#         "CONCURRENT_REQUESTS" : 16  # 这个设置并发数，但是效果好像不是很明显
-# }
 config = ConfigReader('config/settings.yaml',
                       ["DOWNLOADER_MIDDLEWARES", "ITEM_PIPELINES"]).get_item()
 settings = Settings(config)

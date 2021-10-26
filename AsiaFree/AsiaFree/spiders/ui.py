@@ -20,7 +20,6 @@ from PyQt5.Qt import (QApplication, QWidget, QPushButton,
 
 QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 class Ui_dialog(object):
-    self.runner = CrawlerProcess(get_project_settings())
 
     def setupUi(self, dialog):
         dialog.setObjectName("dialog")
@@ -234,10 +233,12 @@ class Ui_dialog(object):
         self.pushButton_2.clicked.connect(self.stop_crawl)
 
     def start_crawl(self):
+        self.runner = CrawlerProcess(get_project_settings())
         self.runner.crawl(RfaSpider)
-        self.thread1 = Thread_1(self.runner)
+        self.thread1 = SpiderThread(self.runner)
         self.thread1.start()
-
+        # print("爬虫开始")
+        # self.runner.start()
 
 
     def stop_crawl(self):

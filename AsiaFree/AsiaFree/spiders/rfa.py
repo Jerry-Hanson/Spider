@@ -2,7 +2,9 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from AsiaFree.items import AsiafreeItem
+import sys
+sys.path.append('..')
+from items import AsiafreeItem
 
 
 class RfaSpider(scrapy.Spider):

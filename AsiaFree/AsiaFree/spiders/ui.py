@@ -9,11 +9,19 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
+from twisted.internet import reactor
 
-from AsiaFree.spiders.rfa import RfaSpider
+from rfa import RfaSpider
+from multiprocessing import Process
+import os
+
+from PyQt5.Qt import (QApplication, QWidget, QPushButton,
+                      QThread)
 
 QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 class Ui_dialog(object):
+    self.runner = CrawlerProcess(get_project_settings())
+
     def setupUi(self, dialog):
         dialog.setObjectName("dialog")
         dialog.resize(661, 428)
@@ -225,18 +233,25 @@ class Ui_dialog(object):
         self.pushButton.clicked.connect(self.start_crawl)
         self.pushButton_2.clicked.connect(self.stop_crawl)
 
-
     def start_crawl(self):
-        self.runner = CrawlerProcess(get_project_settings())
         self.runner.crawl(RfaSpider)
-        print("爬虫开始")
-        self.runner.start()
+        self.thread1 = Thread_1(self.runner)
+        self.thread1.start()
+
 
 
     def stop_crawl(self):
         print("爬虫结束")
         self.runner.stop()
 
+# run spider thread
+class SpiderThread(QThread):
+    def __init__(self, runner):
+        super().__init__()
+        self.runner = runner
+
+    def run(self):
+        self.runner.start()
 
 
 if __name__ == "__main__":
@@ -248,3 +263,4 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+

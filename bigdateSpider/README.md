@@ -3,5 +3,5 @@
 ## how to run the project
 
 ````bash
-python crawl.py
+python ui.py
 ````

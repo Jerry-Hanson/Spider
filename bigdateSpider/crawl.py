@@ -5,7 +5,13 @@ import random
 import logging
 from ConfigReader import ConfigReader
 from items import ScrapydemoItem
-from scrapy.crawler import CrawlerProcess
+from scrapy.crawler import CrawlerProcess, CrawlerRunner
+from twisted.internet import reactor
+from scrapy.utils.log import configure_logging
+
+from multiprocessing import Process
+
+
 
 rand_time = [0.1, 0.2, 0.5, 0.3]
 
@@ -88,7 +94,25 @@ class MainSpider(scrapy.Spider):
         yield item
 
 
+def execute_crawling():
+    process = CrawlerProcess(settings)
+    process.crawl(MainSpider)
+    process.start()
+
+def print_i():
+    import time
+    for i in range(100):
+        print(i)
+        time.sleep(0.5)
+
+
 if __name__ == "__main__":
-    runner = CrawlerProcess(settings)
-    runner.crawl(MainSpider)
-    runner.start()
+    # 必须执行下面的，否则命令行中没有数据输出，555，
+    configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
+
+    # 创建一个CrawlerRunner对象
+    runner = CrawlerRunner(settings)
+
+    d = runner.crawl(MainSpider)  # 返回一个Twisted中的Deferred对象
+    d.addBoth(lambda _: reactor.stop())  # addBoth参考Derrerred的文档
+    reactor.run()

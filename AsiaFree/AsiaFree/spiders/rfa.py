@@ -32,10 +32,8 @@ class RfaSpider(scrapy.Spider):
         item['article_content'] = response.xpath("//div[@id='storytext']/p/text()").extract()
         yield item
 
-def run():
-        runner = CrawlerProcess(get_project_settings())
-        runner.crawl(RfaSpider)
-        runner.start()
+
+
 
 if __name__ == '__main__':
     run()

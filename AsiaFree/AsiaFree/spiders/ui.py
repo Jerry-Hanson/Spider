@@ -13,15 +13,16 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from multiprocessing import Process
 
+import rfa
+
 from AsiaFree.spiders.rfa import RfaSpider
 
 QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
 
 
 def crawl():
-    print(str(get_project_settings()))
     process = CrawlerProcess(get_project_settings())
-    process.crawl(RfaSpider)
+    process.crawl(eval('RfaSpider'))
     process.start()
 
 
@@ -239,7 +240,7 @@ class Ui_dialog(object):
         self.pushButton_2.clicked.connect(self.stop_crawl)
 
     def start_crawl(self):
-        self.Crawler = Process(target=crawl)
+        self.Crawler = Process (target=crawl)
         self.Crawler.start()
 
     def stop_crawl(self):

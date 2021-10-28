@@ -35,5 +35,5 @@ class RfaSpider(scrapy.Spider):
 
 
 
-if __name__ == '__main__':
-    run()
+
+

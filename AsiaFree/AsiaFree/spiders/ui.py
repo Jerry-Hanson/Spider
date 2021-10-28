@@ -7,18 +7,24 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from threading import Thread
+
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
-from twisted.internet import reactor
-
-from rfa import RfaSpider
 from multiprocessing import Process
-import os
 
-from PyQt5.Qt import (QApplication, QWidget, QPushButton,
-                      QThread)
+from AsiaFree.spiders.rfa import RfaSpider
 
 QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+
+
+def crawl():
+    print(str(get_project_settings()))
+    process = CrawlerProcess(get_project_settings())
+    process.crawl(RfaSpider)
+    process.start()
+
+
 class Ui_dialog(object):
 
     def setupUi(self, dialog):
@@ -233,26 +239,11 @@ class Ui_dialog(object):
         self.pushButton_2.clicked.connect(self.stop_crawl)
 
     def start_crawl(self):
-        self.runner = CrawlerProcess(get_project_settings())
-        self.runner.crawl(RfaSpider)
-        self.thread1 = SpiderThread(self.runner)
-        self.thread1.start()
-        # print("爬虫开始")
-        # self.runner.start()
-
+        self.Crawler = Process(target=crawl)
+        self.Crawler.start()
 
     def stop_crawl(self):
-        print("爬虫结束")
-        self.runner.stop()
-
-# run spider thread
-class SpiderThread(QThread):
-    def __init__(self, runner):
-        super().__init__()
-        self.runner = runner
-
-    def run(self):
-        self.runner.start()
+        self.Crawler.terminate()
 
 
 if __name__ == "__main__":
@@ -264,4 +255,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-

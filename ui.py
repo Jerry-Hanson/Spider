@@ -447,7 +447,7 @@ class Ui_MainWindow(object):
 
 
 
-
+    # TODO 优化传参
     def create_process_and_start(self, spider_name, start_func, **kargs):
         process_args = tuple(kargs.values())
         process_name = spider_name + "_process"

@@ -1,3 +1,15 @@
-from scrapy import cmdline
+from TweetScraper.spiders.TweetCrawler import TweetScraper
+from scrapy.utils.project import get_project_settings
+from scrapy.crawler import CrawlerProcess
 
-cmdline.execute("scrapy crawl TweetScraper -a query=\"中共\"".split())
+
+
+def start_crawl():
+    import os
+    base_path = os.getcwd()
+    os.chdir(base_path + '/TweetScraper/TweetScraper')
+    settings = get_project_settings()
+    process = CrawlerProcess(settings)
+    process.crawl(TweetScraper, query='中共')
+    process.start()
+    os.chdir(base_path)

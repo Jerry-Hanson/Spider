@@ -2,11 +2,7 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-import sys
-
 from AsiaFree.items import AsiafreeItem
-
-sys.path.append('..')
 
 
 class RfaSpider(scrapy.Spider):
@@ -32,8 +28,7 @@ class RfaSpider(scrapy.Spider):
         item['article_content'] = response.xpath("//div[@id='storytext']/p/text()").extract()
         yield item
 
-
-
-
-
-
+if __name__ == "__main__":
+    runner = CrawlerProcess(get_project_settings())
+    runner.crawl(RfaSpider)
+    runner.start()

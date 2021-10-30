@@ -10,12 +10,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 import sys
+
 # add module path
 sys.path.append(sys.path[0] + '/BigdataSpider')
 sys.path.append(sys.path[0] + '/AsiaFree')
 sys.path.append(sys.path[0] + '/TweetScraper')
 sys.path.append(sys.path[0] + '/voaSpider')
-
 
 from BigdataSpider.start import start_crawl as start_bigdata_crawl
 from AsiaFree.start import start_crawl as start_asia_crawl
@@ -25,9 +25,10 @@ from voaSpider.start import start_crawl as start_voa_crawl
 from multiprocessing import Process  # 多进程
 from functools import partial  # 包装传入进程的 func
 
+
 class Ui_MainWindow(object):
     def __init__(self):
-        self.spider_index = {"tweet":1, "asia":2, "voa":3, "bigdata":4}
+        self.spider_index = {"tweet": 1, "asia": 2, "voa": 3, "bigdata": 4}
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -451,8 +452,6 @@ class Ui_MainWindow(object):
         self.start4.clicked.connect(partial(self.create_process_and_start, 'big_data', start_bigdata_crawl))
         self.stop4.clicked.connect(partial(self.stop_process, 'big_data'))
 
-
-
     # TODO 优化传参
     def create_process_and_start(self, spider_name, start_func, **kargs):
         process_args = tuple(kargs.values())
@@ -476,6 +475,7 @@ class Ui_MainWindow(object):
         else:
             print("PROCESS NOT EXIST")
             exit(-1)
+
 
 if __name__ == "__main__":
     import sys

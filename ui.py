@@ -14,10 +14,13 @@ import sys
 sys.path.append(sys.path[0] + '/BigdataSpider')
 sys.path.append(sys.path[0] + '/AsiaFree')
 sys.path.append(sys.path[0] + '/TweetScraper')
+sys.path.append(sys.path[0] + '/voaSpider')
+
 
 from BigdataSpider.start import start_crawl as start_bigdata_crawl
 from AsiaFree.start import start_crawl as start_asia_crawl
 from TweetScraper.start import start_crawl as start_tweet_crawl
+from voaSpider.start import start_crawl as start_voa_crawl
 
 from multiprocessing import Process  # 多进程
 from functools import partial  # 包装传入进程的 func
@@ -441,6 +444,9 @@ class Ui_MainWindow(object):
 
         self.start2.clicked.connect(partial(self.create_process_and_start, 'asia', start_asia_crawl))
         self.stop2.clicked.connect(partial(self.stop_process, 'asia'))
+
+        self.start3.clicked.connect(partial(self.create_process_and_start, 'voa', start_voa_crawl))
+        self.stop3.clicked.connect(partial(self.stop_process, 'voa'))
 
         self.start4.clicked.connect(partial(self.create_process_and_start, 'big_data', start_bigdata_crawl))
         self.stop4.clicked.connect(partial(self.stop_process, 'big_data'))

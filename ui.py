@@ -440,17 +440,19 @@ class Ui_MainWindow(object):
         self.action23.setText(_translate("MainWindow", "23"))
 
         # set button click event
-        self.start1.clicked.connect(partial(self.create_process_and_start, 'tweet', start_tweet_crawl))
-        self.stop1.clicked.connect(partial(self.stop_process, 'tweet'))
 
-        self.start2.clicked.connect(partial(self.create_process_and_start, 'asia', start_asia_crawl))
-        self.stop2.clicked.connect(partial(self.stop_process, 'asia'))
+        # 利用partial偏函数固定spider_name等参数来扩展启动函数,
+        self.start1.clicked.connect(partial(self.create_process_and_start, spider_name='tweet',start_func= start_tweet_crawl))
+        self.stop1.clicked.connect(partial(self.stop_process, spider_name='tweet'))
 
-        self.start3.clicked.connect(partial(self.create_process_and_start, 'voa', start_voa_crawl))
-        self.stop3.clicked.connect(partial(self.stop_process, 'voa'))
+        self.start2.clicked.connect(partial(self.create_process_and_start, spider_name='asia', start_func=start_asia_crawl))
+        self.stop2.clicked.connect(partial(self.stop_process, spider_name='asia'))
 
-        self.start4.clicked.connect(partial(self.create_process_and_start, 'big_data', start_bigdata_crawl))
-        self.stop4.clicked.connect(partial(self.stop_process, 'big_data'))
+        self.start3.clicked.connect(partial(self.create_process_and_start, spider_name='voa', start_func=start_voa_crawl))
+        self.stop3.clicked.connect(partial(self.stop_process, spider_name='voa'))
+
+        self.start4.clicked.connect(partial(self.create_process_and_start, spider_name='big_data', start_func=start_bigdata_crawl))
+        self.stop4.clicked.connect(partial(self.stop_process, spider_name='big_data'))
 
     # TODO 优化传参
     def create_process_and_start(self, spider_name, start_func, **kargs):
@@ -458,13 +460,11 @@ class Ui_MainWindow(object):
         process_name = spider_name + "_process"
 
         # 动态创建类属性
-        if getattr(self, process_name, None) == None:
-            setattr(self, process_name, Process(target=start_func, args=process_args))
-        else:
-            print("PROCESS CREATE ERROR")
-            exit(-1)
+        setattr(self, process_name, Process(target=start_func, args=process_args))
+
 
         # 开启进程
+        print(process_name+"started")
         getattr(self, process_name, None).start()
 
     def stop_process(self, spider_name):

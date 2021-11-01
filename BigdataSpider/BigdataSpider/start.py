@@ -3,11 +3,11 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
 
-def start_crawl(**kargs):
+def start_crawl(*args):
     """
     start a MainSpider Process
     :param kargs:
-    :return: process
+    :return
     """
     import os
     base_path = os.getcwd()
@@ -15,8 +15,10 @@ def start_crawl(**kargs):
 
     settings = get_project_settings()
 
+    finished_page,  = args
+
     process = CrawlerProcess(settings)
-    process.crawl(MainSpider)
+    process.crawl(MainSpider, finished_page = finished_page)
     process.start()
 
     os.chdir(base_path)

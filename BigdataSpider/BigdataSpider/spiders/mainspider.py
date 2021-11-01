@@ -17,15 +17,25 @@ class MainSpider(scrapy.Spider):
     cur_page = 1  # 记录当前爬到多少页
     logger = logging.getLogger('MainSpiderLogger')
 
+    def __init__(self, finished_page):
+        super(MainSpider, self).__init__()
+        self.finished_page = finished_page
+
+    def get_maxpage(self):
+        return self.max_page
+
     # 默认相应回调函数
     def parse(self, response):
         """解析起始页"""
         # 获取最多能爬取的页数
         self.max_page = int(response.xpath('//*[@id="main"]/div/div[2]/div[2]/div[31]/a')[-2].xpath('./text()')
                             .extract_first().replace(",", ''))
+        if self.finished_page == 0:
+            self.finished_page = self.max_page
 
         # log
         self.logger.info("最大能爬取到%d页", self.max_page)
+        self.logger.info("预计爬取到%d页", self.finished_page)
 
         yield scrapy.Request(url=self.start_urls[0],
                              callback=self.ParseMain)
@@ -61,8 +71,8 @@ class MainSpider(scrapy.Spider):
         self.logger.info("第%d爬取完毕", self.cur_page)
         self.cur_page += 1
 
-        if self.cur_page > self.max_page:
-            self.logger.error("已经爬到最大页数")
+        if self.cur_page > self.max_page or self.cur_page > self.finished_page:
+            self.logger.info("已经爬到最大页数")
             exit(-1)
 
         yield scrapy.Request(url=self.base_url.format(self.cur_page),

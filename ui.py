@@ -429,7 +429,7 @@ class Ui_MainWindow(object):
         self.label_27.setText(_translate("MainWindow", "进度条"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "美国之音"))
         self.label_gjc4.setText(_translate("MainWindow", "爬取内容关键词："))
-        self.label_number4.setText(_translate("MainWindow", "爬取数量（条）："))
+        self.label_number4.setText(_translate("MainWindow", "爬取数量（页）："))
         self.label_time4.setText(_translate("MainWindow", "休眠时间（s）："))
         self.start4.setText(_translate("MainWindow", "开始"))
         self.stop4.setText(_translate("MainWindow", "停止"))
@@ -454,14 +454,19 @@ class Ui_MainWindow(object):
         self.start4.clicked.connect(partial(self.create_process_and_start, spider_name='big_data', start_func=start_bigdata_crawl))
         self.stop4.clicked.connect(partial(self.stop_process, spider_name='big_data'))
 
-    # TODO 优化传参
-    def create_process_and_start(self, spider_name, start_func, **kargs):
-        process_args = tuple(kargs.values())
+    def create_process_and_start(self, spider_name, start_func):
         process_name = spider_name + "_process"
 
-        # 动态创建类属性
-        setattr(self, process_name, Process(target=start_func, args=process_args))
+        # 大纪元爬虫
+        if spider_name == 'big_data':
+            finished_page = self.spinBox_5.value()
+            process_args = (finished_page, )
+        else:
+            process_args = tuple()
 
+
+        # 动态创建类属性
+        setattr(self, process_name, Process(target=start_func, args = process_args))
 
         # 开启进程
         print(process_name+"started")

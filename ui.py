@@ -340,7 +340,7 @@ class Ui_MainWindow(object):
         self.label_time4 = QtWidgets.QLabel(self.tab_4)
         self.label_time4.setObjectName("label_time4")
         self.horizontalLayout_19.addWidget(self.label_time4)
-        self.timeEdit_6 = QtWidgets.QTimeEdit(self.tab_4)
+        self.timeEdit_6 = QtWidgets.QDateEdit(self.tab_4)
         self.timeEdit_6.setObjectName("timeEdit_6")
         self.horizontalLayout_19.addWidget(self.timeEdit_6)
         self.horizontalLayout_19.setStretch(1, 1)
@@ -442,16 +442,20 @@ class Ui_MainWindow(object):
         # set button click event
 
         # 利用partial偏函数固定spider_name等参数来扩展启动函数,
-        self.start1.clicked.connect(partial(self.create_process_and_start, spider_name='tweet',start_func= start_tweet_crawl))
+        self.start1.clicked.connect(
+            partial(self.create_process_and_start, spider_name='tweet', start_func=start_tweet_crawl))
         self.stop1.clicked.connect(partial(self.stop_process, spider_name='tweet'))
 
-        self.start2.clicked.connect(partial(self.create_process_and_start, spider_name='asia', start_func=start_asia_crawl))
+        self.start2.clicked.connect(
+            partial(self.create_process_and_start, spider_name='asia', start_func=start_asia_crawl))
         self.stop2.clicked.connect(partial(self.stop_process, spider_name='asia'))
 
-        self.start3.clicked.connect(partial(self.create_process_and_start, spider_name='voa', start_func=start_voa_crawl))
+        self.start3.clicked.connect(
+            partial(self.create_process_and_start, spider_name='voa', start_func=start_voa_crawl))
         self.stop3.clicked.connect(partial(self.stop_process, spider_name='voa'))
 
-        self.start4.clicked.connect(partial(self.create_process_and_start, spider_name='big_data', start_func=start_bigdata_crawl))
+        self.start4.clicked.connect(
+            partial(self.create_process_and_start, spider_name='big_data', start_func=start_bigdata_crawl))
         self.stop4.clicked.connect(partial(self.stop_process, spider_name='big_data'))
 
     def create_process_and_start(self, spider_name, start_func):
@@ -460,16 +464,19 @@ class Ui_MainWindow(object):
         # 大纪元爬虫
         if spider_name == 'big_data':
             finished_page = self.spinBox_5.value()
-            process_args = (finished_page, )
+            year, month, day = self.timeEdit_6.date().getDate()
+            finished_time = '-'.join([str(year), str(month), str(day)])
+            process_args = (finished_page,finished_time)
+
         else:
+            # TODO 其他爬虫的定制化启动
             process_args = tuple()
 
-
         # 动态创建类属性
-        setattr(self, process_name, Process(target=start_func, args = process_args))
+        setattr(self, process_name, Process(target=start_func, args=process_args))
 
         # 开启进程
-        print(process_name+"started")
+        print(process_name + "started")
         getattr(self, process_name, None).start()
 
     def stop_process(self, spider_name):

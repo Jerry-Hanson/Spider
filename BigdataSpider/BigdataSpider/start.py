@@ -15,10 +15,10 @@ def start_crawl(*args):
 
     settings = get_project_settings()
 
-    finished_page,  = args
+    finished_page, finished_time = args
 
     process = CrawlerProcess(settings)
-    process.crawl(MainSpider, finished_page = finished_page)
+    process.crawl(MainSpider, finished_page = finished_page, finished_time = finished_time)
     process.start()
 
     os.chdir(base_path)

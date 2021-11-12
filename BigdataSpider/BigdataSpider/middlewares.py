@@ -71,7 +71,7 @@ class BigdataspiderDownloaderMiddleware:
     def process_request(self, request, spider):
         # Called for each request that goes through the downloader
         # middleware.
-        request.meta['proxy'] = "https://127.0.0.1:1080"
+        request.meta['proxy'] = "https://127.0.0.1:10809"
         # Must either:
         # - return None: continue processing this request
         # - or return a Response object

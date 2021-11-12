@@ -503,19 +503,19 @@ class LogThread(QThread):
     def run(self):
         while True:
             if not self.gui.Q.empty():
-                self.gui.textBrowser_4.append(self.gui.Q.get())
+                self.gui.textBrowser_5.append(self.gui.Q.get())
 
                 # 确保滑动条到底
-                cursor = self.gui.textBrowser_4.textCursor()
-                pos = len(self.gui.textBrowser_4.toPlainText())
+                cursor = self.gui.textBrowser_5.textCursor()
+                pos = len(self.gui.textBrowser_5.toPlainText())
                 cursor.setPosition(pos)
-                self.gui.textBrowser_4.setTextCursor(cursor)
+                self.gui.textBrowser_5.setTextCursor(cursor)
 
-                if '爬取结束' in self.gui.textBrowser_4.toPlainText():
+                if '爬取结束' in self.gui.textBrowser_5.toPlainText():
                     break
 
                 # 睡眠10毫秒，否则太快会导致闪退或者显示乱码
-                self.msleep(10)
+                self.msleep(100)
 
 
 if __name__ == "__main__":

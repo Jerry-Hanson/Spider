@@ -122,7 +122,7 @@ class ProxyMiddleware(object):
         if request.url.startswith("http://"):
             request.meta['proxy'] = "http://127.0.0.1:10809"  # http代理
         elif request.url.startswith("https://"):
-            request.meta['proxy'] = "http://127.0.0.1:10809"  # https代理
+            request.meta['proxy'] = "https://127.0.0.1:10809"  # https代理
 
 #         # proxy authentication
 #         proxy_user_pass = "USERNAME:PASSWORD"

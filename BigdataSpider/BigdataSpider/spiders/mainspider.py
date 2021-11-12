@@ -66,7 +66,7 @@ class MainSpider(scrapy.Spider):
 
             if title is not None:
                 # log
-                self.logger.info('正在解析:' + title)
+                self.Q.put('正在解析:' + title)
 
                 # detail_url
                 detail_url = div.xpath('./div[@class="text"]/div[@class="title"]/a/@href').extract_first()

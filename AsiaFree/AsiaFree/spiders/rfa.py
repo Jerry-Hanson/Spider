@@ -12,8 +12,9 @@ class RfaSpider(scrapy.Spider):
     # url_model='https://www.rfa.org/mandarin/story_archive?year={0}&month={1}&b_start:int={2}'
     start_urls = ['https://www.rfa.org/mandarin/story_archive?year=2021&month=2&b_start:int={0}'.format(i) for i in
                   range(0, 1, 1)]
-
+    Q = None
     def parse(self, response):
+        self.Q.put("开始爬取")
         article_url_lists = response.xpath("//div[@class='sectionteaser archive']/h2/a/@href").extract()
 
         for article in article_url_lists:

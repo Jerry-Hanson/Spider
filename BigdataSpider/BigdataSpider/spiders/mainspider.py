@@ -10,19 +10,20 @@ rand_time = [0.1, 0.2, 0.5, 0.3]
 
 class MainSpider(scrapy.Spider):
     name = 'mainspider'
-
     start_urls = ['https://www.epochtimes.com/gb/nsc413.htm']  # 从大陆新闻开始
     base_url = 'https://www.epochtimes.com/gb/nsc413_{0}.htm'
     cur_page = 1  # 记录当前爬到多少页
     logger = logging.getLogger('MainSpiderLogger')
 
-    def __init__(self, finished_page = 0, finished_time = None):
+    def __init__(self, finished_page = 0, finished_time = None,Q=None):
         """
         控制爬取页数和时间
         """
         super(MainSpider, self).__init__()
         self.finished_page = finished_page
         self.finished_time = finished_time
+        self.Q = Q
+        print(Q)
         if self.finished_time != None:
             self.finished_time = datetime.strptime(finished_time, "%Y-%m-%d")
 
@@ -39,6 +40,7 @@ class MainSpider(scrapy.Spider):
     def parse(self, response):
         """解析起始页"""
         # 获取最多能爬取的页数
+        self.Q.put("开始爬取")
         self.max_page = int(response.xpath('//*[@id="main"]/div/div[2]/div[2]/div[31]/a')[-2].xpath('./text()')
                             .extract_first().replace(",", ''))
         if self.finished_page == 0 and self.use_page:

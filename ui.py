@@ -12,6 +12,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 
 # add module path
+from PyQt5.QtCore import QThread
+
 sys.path.append(sys.path[0] + '/BigdataSpider')
 sys.path.append(sys.path[0] + '/AsiaFree')
 sys.path.append(sys.path[0] + '/TweetScraper')
@@ -22,13 +24,15 @@ from AsiaFree.start import start_crawl as start_asia_crawl
 from TweetScraper.start import start_crawl as start_tweet_crawl
 from voaSpider.start import start_crawl as start_voa_crawl
 
-from multiprocessing import Process  # 多进程
+from multiprocessing import Process, Manager  # 多进程
 from functools import partial  # 包装传入进程的 func
 
 
 class Ui_MainWindow(object):
     def __init__(self):
         self.spider_index = {"tweet": 1, "asia": 2, "voa": 3, "bigdata": 4}
+        self.Q = Manager().Queue()
+        self.log_thread = LogThread(self)
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -466,7 +470,7 @@ class Ui_MainWindow(object):
             finished_page = self.spinBox_5.value()
             year, month, day = self.timeEdit_6.date().getDate()
             finished_time = '-'.join([str(year), str(month), str(day)])
-            process_args = (finished_page,finished_time)
+            process_args = (finished_page,finished_time,self.Q)
 
         else:
             # TODO 其他爬虫的定制化启动
@@ -478,15 +482,40 @@ class Ui_MainWindow(object):
         # 开启进程
         print(process_name + "started")
         getattr(self, process_name, None).start()
+        self.log_thread.start()
 
     def stop_process(self, spider_name):
         process_name = spider_name + '_process'
         if getattr(self, process_name, None) != None:
             getattr(self, process_name, None).terminate()
+            self.log_thread.terminate()
             print(process_name + " stoped")
+
         else:
             print("PROCESS NOT EXIST")
             exit(-1)
+
+class LogThread(QThread):
+    def __init__(self, gui):
+        super(LogThread, self).__init__()
+        self.gui = gui
+
+    def run(self):
+        while True:
+            if not self.gui.Q.empty():
+                self.gui.textBrowser_4.append(self.gui.Q.get())
+
+                # 确保滑动条到底
+                cursor = self.gui.textBrowser_4.textCursor()
+                pos = len(self.gui.textBrowser_4.toPlainText())
+                cursor.setPosition(pos)
+                self.gui.textBrowser_4.setTextCursor(cursor)
+
+                if '爬取结束' in self.gui.textBrowser_4.toPlainText():
+                    break
+
+                # 睡眠10毫秒，否则太快会导致闪退或者显示乱码
+                self.msleep(10)
 
 
 if __name__ == "__main__":

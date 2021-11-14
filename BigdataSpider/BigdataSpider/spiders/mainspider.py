@@ -21,9 +21,10 @@ class MainSpider(scrapy.Spider):
         """
         super(MainSpider, self).__init__()
         self.finished_page = finished_page
-        self.finished_time = finished_time
+        # self.finished_time = finished_time
+        # self.finished_page = 1
+        self.finished_time = None
         self.Q = Q
-        print(Q)
         if self.finished_time != None:
             self.finished_time = datetime.strptime(finished_time, "%Y-%m-%d")
 
@@ -48,8 +49,8 @@ class MainSpider(scrapy.Spider):
 
         # log
         if self.use_page:
-            self.logger.info("最大能爬取到%d页", self.max_page)
-            self.logger.info("预计爬取到%d页", self.finished_page)
+            self.Q.put("最大能爬取到{0}页".format(self.max_page))
+            self.Q.put("预计爬取到{0}页".format(self.finished_page))
         else:
             self.logger.info(f"预计爬取到{self.finished_time}为截止日期的文章", )
 
@@ -92,7 +93,8 @@ class MainSpider(scrapy.Spider):
             exit(-1)
         # 控制爬取页数
         if self.cur_page >= self.finished_page and self.use_page:
-            self.logger.info('已经爬取到指定的页数')
+            self.Q.put('爬取结束')
+        self.crawler.engine.close_spider(self, "当调用此方法时打印信息为：无有效信息，关闭spider")
 
         yield scrapy.Request(url=self.base_url.format(self.cur_page),
                              callback=self.ParseMain)

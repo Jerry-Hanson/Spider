@@ -30,9 +30,10 @@ from functools import partial  # 包装传入进程的 func
 
 class Ui_MainWindow(object):
     def __init__(self):
-        self.spider_index = {"tweet": 1, "asia": 2, "voa": 3, "bigdata": 4}
         self.Q = Manager().Queue()
         self.log_thread = LogThread(self)
+        self.spider_index = {"tweet": 1, "asia": 2, "voa": 3, "bigdata": 4}
+
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -487,8 +488,8 @@ class Ui_MainWindow(object):
     def stop_process(self, spider_name):
         process_name = spider_name + '_process'
         if getattr(self, process_name, None) != None:
-            getattr(self, process_name, None).terminate()
             self.log_thread.terminate()
+            getattr(self, process_name, None).terminate()
             print(process_name + " stoped")
 
         else:
@@ -511,11 +512,11 @@ class LogThread(QThread):
                 cursor.setPosition(pos)
                 self.gui.textBrowser_5.setTextCursor(cursor)
 
-                if '爬取结束' in self.gui.textBrowser_5.toPlainText():
-                    break
+                # if '爬取结束' in self.gui.textBrowser_5.toPlainText():
+                #     break
 
                 # 睡眠10毫秒，否则太快会导致闪退或者显示乱码
-                self.msleep(100)
+                # self.msleep(100)
 
 
 if __name__ == "__main__":

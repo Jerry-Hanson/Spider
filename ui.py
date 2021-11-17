@@ -13,6 +13,7 @@ import sys
 
 # add module path
 from PyQt5.QtCore import QThread
+from PyQt5.QtWidgets import QButtonGroup
 
 sys.path.append(sys.path[0] + '/BigdataSpider')
 sys.path.append(sys.path[0] + '/AsiaFree')
@@ -33,7 +34,6 @@ class Ui_MainWindow(object):
         self.Q = Manager().Queue()
         self.log_thread = LogThread(self)
         self.spider_index = {"tweet": 1, "asia": 2, "voa": 3, "bigdata": 4}
-
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -445,37 +445,50 @@ class Ui_MainWindow(object):
         self.action23.setText(_translate("MainWindow", "23"))
 
         # set button click event
-
+        self.stop1.setEnabled(False)
+        self.stop2.setEnabled(False)
+        self.stop3.setEnabled(False)
+        self.stop4.setEnabled(False)
         # 利用partial偏函数固定spider_name等参数来扩展启动函数,
         self.start1.clicked.connect(
-            partial(self.create_process_and_start, spider_name='tweet', start_func=start_tweet_crawl))
-        self.stop1.clicked.connect(partial(self.stop_process, spider_name='tweet'))
+            partial(self.create_process_and_start, spider_name='tweet', start_button=self.start1,
+                    stop_button=self.stop1, start_func=start_tweet_crawl))
+        self.stop1.clicked.connect(
+            partial(self.stop_process, spider_name='tweet', start_button=self.start1, stop_button=self.stop1))
 
         self.start2.clicked.connect(
-            partial(self.create_process_and_start, spider_name='asia', start_func=start_asia_crawl))
-        self.stop2.clicked.connect(partial(self.stop_process, spider_name='asia'))
+            partial(self.create_process_and_start, spider_name='asia', start_button=self.start2, stop_button=self.stop2,
+                    start_func=start_asia_crawl))
+        self.stop2.clicked.connect(
+            partial(self.stop_process, spider_name='asia', start_button=self.start2, stop_button=self.stop2))
 
         self.start3.clicked.connect(
-            partial(self.create_process_and_start, spider_name='voa', start_func=start_voa_crawl))
-        self.stop3.clicked.connect(partial(self.stop_process, spider_name='voa'))
+            partial(self.create_process_and_start, spider_name='voa', start_button=self.start3, stop_button=self.stop3,
+                    start_func=start_voa_crawl))
+        self.stop3.clicked.connect(
+            partial(self.stop_process, spider_name='voa', start_button=self.start3, stop_button=self.stop3))
 
         self.start4.clicked.connect(
-            partial(self.create_process_and_start, spider_name='big_data', start_func=start_bigdata_crawl))
-        self.stop4.clicked.connect(partial(self.stop_process, spider_name='big_data'))
+            partial(self.create_process_and_start, spider_name='big_data', start_button=self.start4,
+                    stop_button=self.stop4, start_func=start_bigdata_crawl))
+        self.stop4.clicked.connect(
+            partial(self.stop_process, spider_name='big_data', start_button=self.start4, stop_button=self.stop4))
 
-    def create_process_and_start(self, spider_name, start_func):
+    def create_process_and_start(self, spider_name, start_button, stop_button, start_func):
         process_name = spider_name + "_process"
-
+        start_button.setEnabled(False)
+        stop_button.setEnabled(True)
         # 大纪元爬虫
         if spider_name == 'big_data':
             finished_page = self.spinBox_5.value()
             year, month, day = self.timeEdit_6.date().getDate()
             finished_time = '-'.join([str(year), str(month), str(day)])
-            process_args = (finished_page,finished_time,self.Q)
+            process_args = (finished_page, finished_time, self.Q)
 
         else:
             # TODO 其他爬虫的定制化启动
             process_args = tuple()
+
 
         # 动态创建类属性
         setattr(self, process_name, Process(target=start_func, args=process_args))
@@ -485,8 +498,10 @@ class Ui_MainWindow(object):
         getattr(self, process_name, None).start()
         self.log_thread.start()
 
-    def stop_process(self, spider_name):
+    def stop_process(self, spider_name, start_button, stop_button):
         process_name = spider_name + '_process'
+        start_button.setEnabled(True)
+        stop_button.setEnabled(False)
         if getattr(self, process_name, None) != None:
             self.log_thread.terminate()
             getattr(self, process_name, None).terminate()
@@ -495,6 +510,7 @@ class Ui_MainWindow(object):
         else:
             print("PROCESS NOT EXIST")
             exit(-1)
+
 
 class LogThread(QThread):
     def __init__(self, gui):
@@ -516,7 +532,7 @@ class LogThread(QThread):
                 #     break
 
                 # 睡眠10毫秒，否则太快会导致闪退或者显示乱码
-                # self.msleep(100)
+                # self.sleep(1)
 
 
 if __name__ == "__main__":

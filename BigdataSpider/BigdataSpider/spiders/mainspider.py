@@ -13,7 +13,6 @@ class MainSpider(scrapy.Spider):
     start_urls = ['https://www.epochtimes.com/gb/nsc413.htm']  # 从大陆新闻开始
     base_url = 'https://www.epochtimes.com/gb/nsc413_{0}.htm'
     cur_page = 1  # 记录当前爬到多少页
-    logger = logging.getLogger('MainSpiderLogger')
 
     def __init__(self, finished_page = 0, finished_time = None,Q=None):
         """
@@ -52,7 +51,7 @@ class MainSpider(scrapy.Spider):
             self.Q.put("最大能爬取到{0}页".format(self.max_page))
             self.Q.put("预计爬取到{0}页".format(self.finished_page))
         else:
-            self.logger.info(f"预计爬取到{self.finished_time}为截止日期的文章", )
+            self.Q.put(f"预计爬取到{self.finished_time}为截止日期的文章", )
 
         yield scrapy.Request(url=self.start_urls[0],
                              callback=self.ParseMain)
@@ -85,16 +84,16 @@ class MainSpider(scrapy.Spider):
                                      callback=self.ParseDetail,
                                      meta={"item": item})
         # log
-        self.logger.info("第%d爬取完毕", self.cur_page)
+        self.Q.put("第{0}爬取完毕".format(self.cur_page))
         self.cur_page += 1
 
         if self.cur_page > self.max_page:
-            self.logger.info('已经爬取到最大页数')
-            exit(-1)
+            self.Q.put('已经爬取到最大页数')
+            self.crawler.engine.close_spider(self, "关闭spider-1")
         # 控制爬取页数
         if self.cur_page >= self.finished_page and self.use_page:
             self.Q.put('爬取结束')
-        self.crawler.engine.close_spider(self, "当调用此方法时打印信息为：无有效信息，关闭spider")
+            self.crawler.engine.close_spider(self, "关闭spider-2")
 
         yield scrapy.Request(url=self.base_url.format(self.cur_page),
                              callback=self.ParseMain)
@@ -115,9 +114,8 @@ class MainSpider(scrapy.Spider):
         if self.use_page is False and release_time != None:
             cur = datetime.strptime(release_time.split('T')[0], "%Y-%m-%d")
             if cur < self.finished_time:
-                self.logger.info("已经爬取到指定的时间")
+                self.Q.put("已经爬取到指定的时间")
                 # 退出爬虫
-                exit(-1)
-
+                self.crawler.engine.close_spider(self, "关闭spider-3")
 
         yield item

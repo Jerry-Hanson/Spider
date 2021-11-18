@@ -9,7 +9,7 @@ def start_crawl(*args):
     import os
     base_path = os.getcwd()
     os.chdir(base_path + "/AsiaFree/AsiaFree")  # 切换scrapy运行的当前目录， 用于读取配置文件
-    Q = args
+    year, month, Q = args
     runner = CrawlerProcess(get_project_settings())
     runner.crawl(RfaSpider,Q)
     runner.start()

@@ -71,7 +71,7 @@ class VoaspiderDownloaderMiddleware:
     def process_request(self, request, spider):
         # Called for each request that goes through the downloader
         # middleware.
-        request.meta['proxy'] = "https://127.0.0.1:1080"
+        request.meta['proxy'] = "https://127.0.0.1:10809"
         # Must either:
         # - return None: continue processing this request
         # - or return a Response object
@@ -106,7 +106,7 @@ import random
 
 class MyprojectProxy(object):
     def __init__(self):
-        self.proxy_list = ["127.0.0.1:1080"]  # 代理IP需改成自己的,此IP不能用
+        self.proxy_list = ["127.0.0.1:10809"]  # 代理IP需改成自己的,此IP不能用
 
     def process_request(self, request, spider):
         proxy = random.choice(self.proxy_list)

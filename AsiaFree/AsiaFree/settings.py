@@ -12,7 +12,7 @@ BOT_NAME = 'AsiaFree'
 SPIDER_MODULES = ['AsiaFree.spiders']
 NEWSPIDER_MODULE = 'AsiaFree.spiders'
 LOG_ENABLED=True
-LOG_LEVEL='DEBUG'
+LOG_LEVEL='INFO'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'

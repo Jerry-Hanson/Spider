@@ -11,7 +11,7 @@ def start_crawl(*args):
     os.chdir(base_path + "/AsiaFree/AsiaFree")  # 切换scrapy运行的当前目录， 用于读取配置文件
     year, month, Q = args
     runner = CrawlerProcess(get_project_settings())
-    runner.crawl(RfaSpider,Q)
+    runner.crawl(RfaSpider,year=year, month=month, Q=Q)
     runner.start()
 
     os.chdir(base_path)

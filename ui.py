@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 
 # add module path
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, QDate
 from PyQt5.QtWidgets import QButtonGroup
 
 sys.path.append(sys.path[0] + '/BigdataSpider')
@@ -195,7 +195,9 @@ class Ui_MainWindow(object):
         self.label_time2 = QtWidgets.QLabel(self.tab_2)
         self.label_time2.setObjectName("label_time2")
         self.horizontalLayout_9.addWidget(self.label_time2)
-        self.timeEdit_3 = QtWidgets.QTimeEdit(self.tab_2)
+        self.timeEdit_3 = QtWidgets.QDateEdit(self.tab_2)
+        self.timeEdit_3.setDisplayFormat("yyyy-MM")
+        self.timeEdit_3.setDate(QDate.currentDate())
         self.timeEdit_3.setObjectName("timeEdit_3")
         self.horizontalLayout_9.addWidget(self.timeEdit_3)
         self.horizontalLayout_9.setStretch(1, 1)
@@ -485,10 +487,13 @@ class Ui_MainWindow(object):
             finished_time = '-'.join([str(year), str(month), str(day)])
             process_args = (finished_page, finished_time, self.Q)
 
+        elif spider_name == "asia":
+            year, month, day= self.timeEdit_3.date().getDate()
+            process_args = (year, month, self.Q)
+
         else:
             # TODO 其他爬虫的定制化启动
             process_args = tuple()
-
 
         # 动态创建类属性
         setattr(self, process_name, Process(target=start_func, args=process_args))

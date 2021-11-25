@@ -17,9 +17,11 @@ DOWNLOAD_DELAY = 1.0
 
 # settings for selenium
 from shutil import which
+import os
 
 SELENIUM_DRIVER_NAME = 'firefox'
 SELENIUM_BROWSER_EXECUTABLE_PATH = which('firefox')
+service_log_path = os.devnull
 SELENIUM_DRIVER_EXECUTABLE_PATH = which('geckodriver')
 # SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
 SELENIUM_DRIVER_ARGUMENTS = ['-headless']
@@ -32,7 +34,7 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     # 'TweetScraper.pipelines.SaveToFilePipeline':100,
     # 'TweetScraper.pipelines.SavetoMySQLPipeline':100,
-    #'TweetScraper.pipelines.SavetoMongoPipeline': 100,
+    # 'TweetScraper.pipelines.SavetoMongoPipeline': 100,
 }
 
 SPIDER_MIDDLEWARES = {

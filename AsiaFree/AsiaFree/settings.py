@@ -12,7 +12,7 @@ BOT_NAME = 'AsiaFree'
 SPIDER_MODULES = ['AsiaFree.spiders']
 NEWSPIDER_MODULE = 'AsiaFree.spiders'
 LOG_ENABLED = True
-LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = 'INFO'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 DEFAULT_REQUEST_HEADERS = {

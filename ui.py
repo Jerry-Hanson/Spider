@@ -31,8 +31,6 @@ from functools import partial  # 包装传入进程的 func
 
 class Ui_MainWindow(object):
     def __init__(self):
-        self.Q = Manager().Queue()
-        self.log_thread = LogThread(self)
         self.spider_index = {"tweet": 1, "asia": 2, "voa": 3, "bigdata": 4}
 
     def setupUi(self, MainWindow):
@@ -454,42 +452,46 @@ class Ui_MainWindow(object):
         # 利用partial偏函数固定spider_name等参数来扩展启动函数,
         self.start1.clicked.connect(
             partial(self.create_process_and_start, spider_name='tweet', start_button=self.start1,
-                    stop_button=self.stop1, start_func=start_tweet_crawl))
+                    stop_button=self.stop1,textBrowser=self.textBrowser, start_func=start_tweet_crawl))
         self.stop1.clicked.connect(
             partial(self.stop_process, spider_name='tweet', start_button=self.start1, stop_button=self.stop1))
 
         self.start2.clicked.connect(
             partial(self.create_process_and_start, spider_name='asia', start_button=self.start2, stop_button=self.stop2,
-                    start_func=start_asia_crawl))
+                    textBrowser=self.textBrowser_2, start_func=start_asia_crawl))
         self.stop2.clicked.connect(
             partial(self.stop_process, spider_name='asia', start_button=self.start2, stop_button=self.stop2))
 
         self.start3.clicked.connect(
             partial(self.create_process_and_start, spider_name='voa', start_button=self.start3, stop_button=self.stop3,
-                    start_func=start_voa_crawl))
+                    textBrowser=self.textBrowser_3, start_func=start_voa_crawl))
         self.stop3.clicked.connect(
             partial(self.stop_process, spider_name='voa', start_button=self.start3, stop_button=self.stop3))
 
         self.start4.clicked.connect(
             partial(self.create_process_and_start, spider_name='big_data', start_button=self.start4,
-                    stop_button=self.stop4, start_func=start_bigdata_crawl))
+                    stop_button=self.stop4, textBrowser=self.textBrowser_5,start_func=start_bigdata_crawl))
         self.stop4.clicked.connect(
             partial(self.stop_process, spider_name='big_data', start_button=self.start4, stop_button=self.stop4))
 
-    def create_process_and_start(self, spider_name, start_button, stop_button, start_func):
-        process_name = spider_name + "_process"
+    def create_process_and_start(self, spider_name, start_button, stop_button, textBrowser, start_func):
         start_button.setEnabled(False)
         stop_button.setEnabled(True)
+        process_name = spider_name + "_process"
+        logThreadName = spider_name + "_logThread"
+        queue_name = spider_name + "_queue"
+        setattr(self, queue_name, Manager().Queue())
+        Q = getattr(self, queue_name, None)
         # 大纪元爬虫
         if spider_name == 'big_data':
             finished_page = self.spinBox_5.value()
             year, month, day = self.timeEdit_6.date().getDate()
             finished_time = '-'.join([str(year), str(month), str(day)])
-            process_args = (finished_page, finished_time, self.Q)
+            process_args = (finished_page, finished_time, Q)
 
         elif spider_name == "asia":
-            year, month, day= self.timeEdit_3.date().getDate()
-            process_args = (year, month, self.Q)
+            year, month, day = self.timeEdit_3.date().getDate()
+            process_args = (year, month, Q)
 
         else:
             # TODO 其他爬虫的定制化启动
@@ -497,41 +499,46 @@ class Ui_MainWindow(object):
 
         # 动态创建类属性
         setattr(self, process_name, Process(target=start_func, args=process_args))
+        setattr(self, logThreadName, LogThread(Q=Q, textBrowser=textBrowser))
 
         # 开启进程
         print(process_name + "started")
         getattr(self, process_name, None).start()
-        self.log_thread.start()
+        getattr(self, logThreadName, None).start()
 
     def stop_process(self, spider_name, start_button, stop_button):
+
         process_name = spider_name + '_process'
-        start_button.setEnabled(True)
-        stop_button.setEnabled(False)
-        if getattr(self, process_name, None) != None:
-            self.log_thread.terminate()
+        logThreadName = spider_name + "_logThread"
+
+        if getattr(self, process_name, None) is not None and getattr(self, logThreadName, None) is not None:
+            getattr(self, logThreadName, None).terminate()
             getattr(self, process_name, None).terminate()
             print(process_name + " stoped")
 
         else:
             print("PROCESS NOT EXIST")
             exit(-1)
+        start_button.setEnabled(True)
+        stop_button.setEnabled(False)
 
 
 class LogThread(QThread):
-    def __init__(self, gui):
+    def __init__(self, Q, textBrowser):
         super(LogThread, self).__init__()
-        self.gui = gui
+        self.Q = Q
+        self.textBrowser = textBrowser
 
     def run(self):
         while True:
-            if not self.gui.Q.empty():
-                self.gui.textBrowser_5.append(self.gui.Q.get())
+            if not self.Q.empty():
+                self.textBrowser.append(self.Q.get())
 
                 # 确保滑动条到底
-                cursor = self.gui.textBrowser_5.textCursor()
-                pos = len(self.gui.textBrowser_5.toPlainText())
+                cursor = self.textBrowser.textCursor()
+                pos = len(self.textBrowser.toPlainText())
                 cursor.setPosition(pos)
-                self.gui.textBrowser_5.setTextCursor(cursor)
+                self.textBrowser.setTextCursor(cursor)
 
                 # if '爬取结束' in self.gui.textBrowser_5.toPlainText():
                 #     break

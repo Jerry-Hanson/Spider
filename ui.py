@@ -452,7 +452,7 @@ class Ui_MainWindow(object):
         # 利用partial偏函数固定spider_name等参数来扩展启动函数,
         self.start1.clicked.connect(
             partial(self.create_process_and_start, spider_name='tweet', start_button=self.start1,
-                    stop_button=self.stop1,textBrowser=self.textBrowser, start_func=start_tweet_crawl))
+                    stop_button=self.stop1, textBrowser=self.textBrowser, start_func=start_tweet_crawl))
         self.stop1.clicked.connect(
             partial(self.stop_process, spider_name='tweet', start_button=self.start1, stop_button=self.stop1))
 
@@ -470,7 +470,7 @@ class Ui_MainWindow(object):
 
         self.start4.clicked.connect(
             partial(self.create_process_and_start, spider_name='big_data', start_button=self.start4,
-                    stop_button=self.stop4, textBrowser=self.textBrowser_5,start_func=start_bigdata_crawl))
+                    stop_button=self.stop4, textBrowser=self.textBrowser_5, start_func=start_bigdata_crawl))
         self.stop4.clicked.connect(
             partial(self.stop_process, spider_name='big_data', start_button=self.start4, stop_button=self.stop4))
 
@@ -500,6 +500,7 @@ class Ui_MainWindow(object):
         # 动态创建类属性
         setattr(self, process_name, Process(target=start_func, args=process_args))
         setattr(self, logThreadName, LogThread(Q=Q, textBrowser=textBrowser))
+        getattr(self, logThreadName, None).updated.connect(partial(self.show_log, textBrowser=textBrowser))
 
         # 开启进程
         print(process_name + "started")
@@ -522,8 +523,17 @@ class Ui_MainWindow(object):
         start_button.setEnabled(True)
         stop_button.setEnabled(False)
 
+    def show_log(self, msg, textBrowser):
+        textBrowser.append(msg)
+        cursor = textBrowser.textCursor()
+        pos = len(textBrowser.toPlainText())
+        cursor.setPosition(pos)
+        textBrowser.setTextCursor(cursor)
+
 
 class LogThread(QThread):
+    updated = QtCore.pyqtSignal(str)
+
     def __init__(self, Q, textBrowser):
         super(LogThread, self).__init__()
         self.Q = Q
@@ -532,13 +542,13 @@ class LogThread(QThread):
     def run(self):
         while True:
             if not self.Q.empty():
-                self.textBrowser.append(self.Q.get())
+                self.updated.emit(str(self.Q.get()))
 
                 # 确保滑动条到底
-                cursor = self.textBrowser.textCursor()
-                pos = len(self.textBrowser.toPlainText())
-                cursor.setPosition(pos)
-                self.textBrowser.setTextCursor(cursor)
+                # cursor = self.textBrowser.textCursor()
+                # pos = len(self.textBrowser.toPlainText())
+                # cursor.setPosition(pos)
+                # self.textBrowser.setTextCursor(cursor)
 
                 # if '爬取结束' in self.gui.textBrowser_5.toPlainText():
                 #     break

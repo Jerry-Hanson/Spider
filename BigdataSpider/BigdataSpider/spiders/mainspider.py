@@ -1,7 +1,6 @@
 import scrapy
 import time
 import random
-import logging
 from BigdataSpider.items import BigdataspiderItem
 from datetime import datetime
 
@@ -88,7 +87,7 @@ class MainSpider(scrapy.Spider):
         self.cur_page += 1
 
         if self.cur_page > self.max_page:
-            self.Q.put('已经爬取到最大页数')
+            self.Q.put('爬取结束')
             self.crawler.engine.close_spider(self, "关闭spider-1")
         # 控制爬取页数
         if self.cur_page >= self.finished_page and self.use_page:
@@ -114,8 +113,9 @@ class MainSpider(scrapy.Spider):
         if self.use_page is False and release_time != None:
             cur = datetime.strptime(release_time.split('T')[0], "%Y-%m-%d")
             if cur < self.finished_time:
-                self.Q.put("已经爬取到指定的时间")
+                self.Q.put("爬取结束")
                 # 退出爬虫
+
                 self.crawler.engine.close_spider(self, "关闭spider-3")
 
         yield item

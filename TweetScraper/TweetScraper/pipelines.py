@@ -142,7 +142,7 @@ class SavetoMongoPipeline(object):
         db_url = spider.settings.get('MONGODB_URI', 'mongodb://localhost:27017')
         db_name = spider.settings.get('MONGODB_DB_NAME', 'scrapy_default')
 
-        self.db_client = MongoClient('mongodb://localhost:27017')
+        self.db_client = MongoClient(db_url)
         self.db = self.db_client[db_name]
 
     def close_spider(self, spider):

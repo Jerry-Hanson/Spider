@@ -28,7 +28,8 @@ SELENIUM_DRIVER_ARGUMENTS = ['-headless']
 # SELENIUM_DRIVER_ARGUMENTS=[]
 # '--headless' if using chrome instead of firefox
 DOWNLOADER_MIDDLEWARES = {
-    'scrapy_selenium.SeleniumMiddleware': 800
+    'scrapy_selenium.SeleniumMiddleware': 800,
+
 }
 
 ITEM_PIPELINES = {

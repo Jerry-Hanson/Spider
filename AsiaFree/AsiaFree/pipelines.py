@@ -6,6 +6,7 @@
 
 # useful for handling different item types with a single interface
 import pymysql
+from pymongo import MongoClient
 
 
 class AsiafreePipeline:
@@ -44,3 +45,33 @@ class AsiafreePipeline:
         # 第四步 用游标执行数据库命令
         self.db_cur.execute(sql, values)
 
+
+class asiaFreeMongoPipline:
+    def open_spider(self, spider):
+        """
+        该方法用于连接数据库
+        """
+        #get(key,default)
+        db_url = spider.settings.get('MONGODB_URI', 'mongodb://localhost:27017')
+        db_name = spider.settings.get('MONGODB_DB_NAME', 'scrapy_default')
+
+        self.db_client = MongoClient(db_url)
+        self.db = self.db_client[db_name]
+
+    def close_spider(self, spider):
+        """
+        该方法用于关闭数据库
+        """
+        self.db_client.close()
+
+    def process_item(self, item, spider):
+        """
+        该方法用于插入数据
+        """
+        self.insert_db(item)
+
+        return item
+
+    def insert_db(self, item):
+        data = dict(item)
+        self.db.article.insert_one(data)  # 向集合books中插入数据

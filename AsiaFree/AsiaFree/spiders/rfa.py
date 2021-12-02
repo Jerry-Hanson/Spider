@@ -28,6 +28,7 @@ class RfaSpider(scrapy.Spider):
         self.Q.put("开始爬取")
         self.max_page = int(response.xpath("//ul/li[@class='last']/a/text()").extract_first())
         self.Q.put("预计爬取{0}条文章".format((self.max_page-1)*15))
+        # print("预计爬取{0}条文章".format((self.max_page-1)*15))
         for index in range(0, (self.max_page-1)*15+1) :
             url = 'https://www.rfa.org/mandarin/story_archive?year={0}&month={1}&b_start:int={2}'.format(self.year, self.month, index)
             yield scrapy.Request(url=url , callback=self.parse_page)
@@ -46,6 +47,7 @@ class RfaSpider(scrapy.Spider):
         item['article_title'] = response.xpath(
             "//div[@id='storycontent']/div[@id='storypagemaincol']/div[@class='mobilecontainer']/h1/text()").extract_first()
         self.Q.put(item['article_title'])
+        # print(item['article_title'])
         item['publish_date'] = response.xpath(
             "//div[@id='storytop']/div[@id='dateline']/span[@id='story_date']/text()").extract_first()
         item['article_content'] = response.xpath("//div[@id='storytext']/p/text()").extract()

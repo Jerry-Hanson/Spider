@@ -558,18 +558,6 @@ class LogThread(QThread):
         while True:
             if not self.Q.empty():
                 self.updated.emit(str(self.Q.get()))
-                pass
-                # 确保滑动条到底
-                # cursor = self.textBrowser.textCursor()
-                # pos = len(self.textBrowser.toPlainText())
-                # cursor.setPosition(pos)
-                # self.textBrowser.setTextCursor(cursor)
-
-                # if '爬取结束' in self.gui.textBrowser_5.toPlainText():
-                #     break
-
-                # 睡眠10毫秒，否则太快会导致闪退或者显示乱码
-                # self.sleep(1)
 
 
 if __name__ == "__main__":

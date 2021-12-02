@@ -543,7 +543,7 @@ class LogThread(QThread):
         while True:
             if not self.Q.empty():
                 self.updated.emit(str(self.Q.get()))
-
+                pass
                 # 确保滑动条到底
                 # cursor = self.textBrowser.textCursor()
                 # pos = len(self.textBrowser.toPlainText())

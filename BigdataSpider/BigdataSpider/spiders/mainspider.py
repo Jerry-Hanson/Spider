@@ -2,6 +2,7 @@ import scrapy
 import time
 import random
 from BigdataSpider.items import BigdataspiderItem
+
 from datetime import datetime
 
 rand_time = [0.1, 0.2, 0.5, 0.3]
@@ -13,7 +14,7 @@ class MainSpider(scrapy.Spider):
     base_url = 'https://www.epochtimes.com/gb/nsc413_{0}.htm'
     cur_page = 1  # 记录当前爬到多少页
 
-    def __init__(self, finished_page = 0, finished_time = None,Q=None):
+    def __init__(self, finished_page = 0, finished_time = None,Q=None, dbInfo = None):
         """
         控制爬取页数和时间
         """
@@ -23,6 +24,8 @@ class MainSpider(scrapy.Spider):
         # self.finished_page = 1
         self.finished_time = None
         self.Q = Q
+        self.dbInfo = dbInfo
+
         if self.finished_time != None:
             self.finished_time = datetime.strptime(finished_time, "%Y-%m-%d")
 

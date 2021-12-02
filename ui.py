@@ -49,6 +49,7 @@ class Ui_MainWindow(object):
         self.label_IP = QtWidgets.QLabel(self.centralwidget)
         self.label_IP.setObjectName("label_IP")
         self.horizontalLayout.addWidget(self.label_IP)
+
         self.lineEdit_ip = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_ip.setObjectName("lineEdit_ip")
         self.horizontalLayout.addWidget(self.lineEdit_ip)
@@ -326,6 +327,8 @@ class Ui_MainWindow(object):
         self.label_gjc4 = QtWidgets.QLabel(self.tab_4)
         self.label_gjc4.setObjectName("label_gjc4")
         self.horizontalLayout_14.addWidget(self.label_gjc4)
+
+        # line edit
         self.lineEdit_gjc4 = QtWidgets.QLineEdit(self.tab_4)
         self.lineEdit_gjc4.setObjectName("lineEdit_gjc4")
         self.horizontalLayout_14.addWidget(self.lineEdit_gjc4)
@@ -337,6 +340,7 @@ class Ui_MainWindow(object):
         self.label_number4.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.label_number4.setObjectName("label_number4")
         self.horizontalLayout_19.addWidget(self.label_number4)
+        # spin Box
         self.spinBox_5 = QtWidgets.QSpinBox(self.tab_4)
         self.spinBox_5.setObjectName("spinBox_5")
         self.horizontalLayout_19.addWidget(self.spinBox_5)
@@ -345,6 +349,8 @@ class Ui_MainWindow(object):
         self.label_time4 = QtWidgets.QLabel(self.tab_4)
         self.label_time4.setObjectName("label_time4")
         self.horizontalLayout_19.addWidget(self.label_time4)
+
+        # time edit
         self.timeEdit_6 = QtWidgets.QDateEdit(self.tab_4)
         self.timeEdit_6.setObjectName("timeEdit_6")
         self.horizontalLayout_19.addWidget(self.timeEdit_6)
@@ -482,12 +488,21 @@ class Ui_MainWindow(object):
         queue_name = spider_name + "_queue"
         setattr(self, queue_name, Manager().Queue())
         Q = getattr(self, queue_name, None)
+
+        dbIp = self.lineEdit_ip.text()
+        dbUser = self.lineEdit_user.text()
+        dbPassword = self.lineEdit_passward.text()
+        dbName = self.lineEdit_dbname.text()
+        dbtName = self.lineEdit_dtname.text()
+        # print(dbIp, dbUser, dbPassword, dbName, dbtName)
+        dbInfo = {"dbIp":dbIp, "dbUser": dbUser, "dbPassword": dbPassword,
+            "dbName": dbName, "dbtName": dbtName}
         # 大纪元爬虫
         if spider_name == 'big_data':
             finished_page = self.spinBox_5.value()
             year, month, day = self.timeEdit_6.date().getDate()
             finished_time = '-'.join([str(year), str(month), str(day)])
-            process_args = (finished_page, finished_time, Q)
+            process_args = (finished_page, finished_time, Q, dbInfo)
 
         elif spider_name == "asia":
             year, month, day = self.timeEdit_3.date().getDate()

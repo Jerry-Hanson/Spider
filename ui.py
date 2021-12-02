@@ -75,12 +75,12 @@ class Ui_MainWindow(object):
         self.lineEdit_dbname = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit_dbname.setObjectName("lineEdit_dbname")
         self.horizontalLayout_2.addWidget(self.lineEdit_dbname)
-        self.label_datetable_name = QtWidgets.QLabel(self.centralwidget)
-        self.label_datetable_name.setObjectName("label_datetable_name")
-        self.horizontalLayout_2.addWidget(self.label_datetable_name)
-        self.lineEdit_dtname = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_dtname.setObjectName("lineEdit_dtname")
-        self.horizontalLayout_2.addWidget(self.lineEdit_dtname)
+        self.label_port = QtWidgets.QLabel(self.centralwidget)
+        self.label_port.setObjectName("label_datetable_name")
+        self.horizontalLayout_2.addWidget(self.label_port)
+        self.lineEdit_port = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit_port.setObjectName("lineEdit_port")
+        self.horizontalLayout_2.addWidget(self.lineEdit_port)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.verticalLayout_6.addLayout(self.verticalLayout)
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
@@ -414,7 +414,7 @@ class Ui_MainWindow(object):
         self.label_user.setText(_translate("MainWindow", "账号"))
         self.label_passward.setText(_translate("MainWindow", "密码"))
         self.label_datebasename.setText(_translate("MainWindow", "数据库名"))
-        self.label_datetable_name.setText(_translate("MainWindow", "数据表名"))
+        self.label_port.setText(_translate("MainWindow", "代理端口"))
         self.label_gjc1.setText(_translate("MainWindow", "爬取内容关键词："))
         self.label_number1.setText(_translate("MainWindow", "爬取数量（条）："))
         self.label_time1.setText(_translate("MainWindow", "休眠时间（s）："))
@@ -493,10 +493,10 @@ class Ui_MainWindow(object):
         dbUser = self.lineEdit_user.text()
         dbPassword = self.lineEdit_passward.text()
         dbName = self.lineEdit_dbname.text()
-        dbtName = self.lineEdit_dtname.text()
+        port = self.lineEdit_port.text()
         # print(dbIp, dbUser, dbPassword, dbName, dbtName)
         dbInfo = {"dbIp":dbIp, "dbUser": dbUser, "dbPassword": dbPassword,
-            "dbName": dbName, "dbtName": dbtName}
+            "dbName": dbName, "port": port}
         # 大纪元爬虫
         if spider_name == 'big_data':
             finished_page = self.spinBox_5.value()

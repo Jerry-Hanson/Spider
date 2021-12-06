@@ -111,9 +111,9 @@ class ProxyMiddleware(object):
     def process_request(self, request,spider):
 
         if request.url.startswith("http://"):
-            request.meta['proxy'] = "http://127.0.0.1:10809"  # http代理
+            request.meta['proxy'] = "http://127.0.0.1:7890"  # http代理
         elif request.url.startswith("https://"):
-            request.meta['proxy'] = "https://127.0.0.1:10809"  # https代理
+            request.meta['proxy'] = "https://127.0.0.1:7890"  # https代理
 
 #         # proxy authentication
 #         proxy_user_pass = "USERNAME:PASSWORD"

@@ -1,4 +1,5 @@
 import scrapy
+from scrapy import signals
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
@@ -19,6 +20,15 @@ class RfaSpider(scrapy.Spider):
         self.month = month
         self.start_url = 'https://www.rfa.org/mandarin/story_archive?year={0}&month={1}'.format(self.year, self.month)
         self.max_page = 0
+
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider = super(RfaSpider, cls).from_crawler(crawler, *args, **kwargs)
+        crawler.signals.connect(spider.spider_closed, signal=signals.spider_closed)
+        return spider
+
+    def spider_closed(self, spider):
+        self.Q.put("爬虫结束")
 
     def start_requests(self):
 
@@ -52,6 +62,7 @@ class RfaSpider(scrapy.Spider):
             "//div[@id='storytop']/div[@id='dateline']/span[@id='story_date']/text()").extract_first()
         item['article_content'] = response.xpath("//div[@id='storytext']/p/text()").extract()
         yield item
+
 
 
 if __name__ == "__main__":

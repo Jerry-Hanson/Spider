@@ -495,8 +495,8 @@ class Ui_MainWindow(object):
         dbName = self.lineEdit_dbname.text()
         port = self.lineEdit_port.text()
         # print(dbIp, dbUser, dbPassword, dbName, dbtName)
-        dbInfo = {"dbIp":dbIp, "dbUser": dbUser, "dbPassword": dbPassword,
-            "dbName": dbName, "port": port}
+        dbInfo = {"dbIp": dbIp, "dbUser": dbUser, "dbPassword": dbPassword,
+                  "dbName": dbName, "port": port}
         # 大纪元爬虫
         if spider_name == 'big_data':
             finished_page = self.spinBox_5.value()
@@ -514,8 +514,10 @@ class Ui_MainWindow(object):
 
         # 动态创建类属性
         setattr(self, process_name, Process(target=start_func, args=process_args))
-        setattr(self, logThreadName, LogThread(Q=Q, textBrowser=textBrowser))
-        getattr(self, logThreadName, None).updated.connect(partial(self.show_log, textBrowser=textBrowser))
+        setattr(self, logThreadName, LogThread(Q=Q))
+        getattr(self, logThreadName, None).updated.connect(
+            partial(self.show_log, textBrowser=textBrowser, spider_name=spider_name, start_button=start_button,
+                    stop_button=stop_button))
 
         # 开启进程
         print(process_name + "started")
@@ -538,21 +540,22 @@ class Ui_MainWindow(object):
         start_button.setEnabled(True)
         stop_button.setEnabled(False)
 
-    def show_log(self, msg, textBrowser):
+    def show_log(self, msg, textBrowser, spider_name, start_button, stop_button):
         textBrowser.append(msg)
         cursor = textBrowser.textCursor()
         pos = len(textBrowser.toPlainText())
         cursor.setPosition(pos)
         textBrowser.setTextCursor(cursor)
+        if msg == "爬虫结束":
+            self.stop_process(spider_name=spider_name, start_button=start_button, stop_button=stop_button)
 
 
 class LogThread(QThread):
     updated = QtCore.pyqtSignal(str)
 
-    def __init__(self, Q, textBrowser):
+    def __init__(self, Q):
         super(LogThread, self).__init__()
         self.Q = Q
-        self.textBrowser = textBrowser
 
     def run(self):
         while True:

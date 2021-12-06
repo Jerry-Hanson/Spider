@@ -1,6 +1,9 @@
 import scrapy
 import time
 import random
+
+from scrapy import signals
+
 from BigdataSpider.items import BigdataspiderItem
 
 from datetime import datetime
@@ -34,6 +37,15 @@ class MainSpider(scrapy.Spider):
             self.use_page = False
         else:
             self.use_page = True
+
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider = super(MainSpider, cls).from_crawler(crawler, *args, **kwargs)
+        crawler.signals.connect(spider.spider_closed, signal=signals.spider_closed)
+        return spider
+
+    def spider_closed(self, spider):
+        self.Q.put("爬虫结束")
 
     def get_maxpage(self):
         return self.max_page

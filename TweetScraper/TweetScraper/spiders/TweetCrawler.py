@@ -17,7 +17,7 @@ class TweetScraper(CrawlSpider):
     name = 'TweetScraper'
     allowed_domains = ['twitter.com']
 
-    def __init__(self, query, dbInfo, Q):
+    def __init__(self, query='中共', dbInfo=None, Q=None):
         self.url = (
             f'https://api.twitter.com/2/search/adaptive.json?'
             f'include_profile_interstitial_type=1'
@@ -85,7 +85,8 @@ class TweetScraper(CrawlSpider):
         return spider
 
     def spider_closed(self, spider):
-        self.Q.put("爬虫结束")
+        # self.Q.put("爬虫结束")
+        pass
 
     def start_requests(self):
         """

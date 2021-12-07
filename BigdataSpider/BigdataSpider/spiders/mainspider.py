@@ -17,7 +17,7 @@ class MainSpider(scrapy.Spider):
     base_url = 'https://www.epochtimes.com/gb/nsc413_{0}.htm'
     cur_page = 1  # 记录当前爬到多少页
 
-    def __init__(self, finished_page = 0, finished_time = None,Q=None, dbInfo = None):
+    def __init__(self, finished_page=0, finished_time=None, Q=None, dbInfo=7890):
         """
         控制爬取页数和时间
         """

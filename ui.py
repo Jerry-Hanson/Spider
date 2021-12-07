@@ -506,7 +506,7 @@ class Ui_MainWindow(object):
 
         elif spider_name == "asia":
             year, month, day = self.timeEdit_3.date().getDate()
-            process_args = (year, month, Q)
+            process_args = (year, month, Q, dbInfo)
 
         else:
             # TODO 其他爬虫的定制化启动

@@ -1,7 +1,7 @@
 import re, json, logging
 from urllib.parse import quote
 import copy
-from scrapy import http
+from scrapy import http, signals
 from scrapy.crawler import CrawlerProcess
 from scrapy.spiders import CrawlSpider
 from scrapy.core.downloader.middleware import DownloaderMiddlewareManager
@@ -17,7 +17,7 @@ class TweetScraper(CrawlSpider):
     name = 'TweetScraper'
     allowed_domains = ['twitter.com']
 
-    def __init__(self, query):
+    def __init__(self, query, dbInfo, Q):
         self.url = (
             f'https://api.twitter.com/2/search/adaptive.json?'
             f'include_profile_interstitial_type=1'
@@ -55,6 +55,8 @@ class TweetScraper(CrawlSpider):
         # regex for finding next cursor
         self.cursor_re = re.compile('"(scroll:[^"]*)"')
         self.detail_conversation_re = re.compile('conversationthread')
+        self.Q = Q
+        self.dbInfo = dbInfo
         # 需要定时更新
         self.detail_headers = {
             'authority': 'twitter.com',
@@ -76,6 +78,14 @@ class TweetScraper(CrawlSpider):
             'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7',
             'cookie': 'kdt=lj6rABjhNXDpQpHM4V6bcA2RbFguCC15ZPVCy85G; dnt=1; remember_checked_on=1; ads_prefs="HBESAAA="; personalization_id="v1_23hOXYs09HUrlnwcCqfT6Q=="; guest_id=v1%3A162719985151538512; des_opt_in=Y; guest_id_marketing=v1%3A162719985151538512; guest_id_ads=v1%3A162719985151538512; g_state={"i_l":0}; external_referer=padhuUp37zjgzgv1mFWxJ5Xq0CLV%2BbpWuS41v6lN3QU%3D|0|8e8t2xd8A2w%3D; gt=1466269184825106432; at_check=true; mbox=PC#bb5b1775f75f43458aa5aa6810c60e3a.38_0#1701665611|session#c92ae7443db040c0a78c13e44ea30a71#1638422670; _twitter_sess=BAh7CSIKZmxhc2hJQzonQWN0aW9uQ29udHJvbGxlcjo6Rmxhc2g6OkZsYXNo%250ASGFzaHsABjoKQHVzZWR7ADoPY3JlYXRlZF9hdGwrCMlIfnl9AToMY3NyZl9p%250AZCIlOGY3NzNlNjJiNWMzNTQ4NjE0ZWZlMTg2MjY4YTFlNGE6B2lkIiUyOTA2%250AZjU1NDk4M2UzZjNkOTM4MWYxN2Q3NGJlNWU1Yw%253D%253D--8a541d83f5ce0358c4d3b494eeea25709ab27eb0; auth_token=3a3579487d12a10f14950aef3fc02f898a3df8e0; ct0=2b137fa72236f217736dcd584d136c38b57f8d3fb6967fecdc4f62f211e5aa6e6a84b8000f4adc8d6a9d327371de44e9b470e3e2abda795ba540af40f26e2dd3cbef878814084fe8cf2e796d8904588c; twid=u%3D1418830181561733121; att=1-q1gpkIza5CT9hP7GNnxntTSNUum8BQzkS6IP1V6z',
         }
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider = super(TweetScraper, cls).from_crawler(crawler, *args, **kwargs)
+        crawler.signals.connect(spider.spider_closed, signal=signals.spider_closed)
+        return spider
+
+    def spider_closed(self, spider):
+        self.Q.put("爬虫结束")
 
     def start_requests(self):
         """

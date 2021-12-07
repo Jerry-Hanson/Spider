@@ -508,6 +508,10 @@ class Ui_MainWindow(object):
             year, month, day = self.timeEdit_3.date().getDate()
             process_args = (year, month, Q, dbInfo)
 
+        elif spider_name == "tweet":
+            keyword = self.lineEdit_gjc1.text()
+            process_args = (keyword, Q, dbInfo)
+
         else:
             # TODO 其他爬虫的定制化启动
             process_args = tuple()

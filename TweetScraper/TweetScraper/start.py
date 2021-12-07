@@ -10,7 +10,7 @@ def start_crawl(*args):
     os.chdir(base_path + '/TweetScraper/TweetScraper')
     settings = get_project_settings()
     process = CrawlerProcess(settings)
-    Q = args
-    process.crawl(TweetScraper, query='中共')
+    keyword, Q, dbInfo = args
+    process.crawl(TweetScraper, query=keyword,Q=Q,dbInfo=dbInfo)
     process.start()
     os.chdir(base_path)

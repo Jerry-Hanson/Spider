@@ -6,27 +6,36 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 from pymongo import MongoClient
-from scrapy.utils.project import get_project_settings
 
-settings = get_project_settings()
+
 
 class BigdataspiderPipeline:
-    # def __init__(self):
-    #     # self.mongodb_url = settings['MONGODB_URI']
-    #     # self.mongodb_db_name = settings['MONGODB_DB_NAME']
-    #     #
-    #     # self.client = MongoClient(self.mongodb_url)
-    #     # self.db = self.client[self.mongodb_db_name]
-
     def open_spider(self, spider):
-        self.dbInfo = spider.dbInfo
-        self.client = MongoClient(self.dbInfo['dbIp'])
-        self.db = self.client[self.dbInfo['dbName']]
+        """
+        该方法用于连接数据库
+        """
+        #get(key,default)
+        db_url = spider.settings.get('MONGODB_URI', 'mongodb://localhost:27017')
+        db_name = spider.settings.get('MONGODB_DB_NAME', 'bigdate')
 
+        self.db_client = MongoClient(db_url)
+        self.db = self.db_client[db_name]
 
-    # def __del__(self):
-    #     self.client.close()
+    def close_spider(self, spider):
+        """
+        该方法用于关闭数据库
+        """
+        self.db_client.close()
 
     def process_item(self, item, spider):
-        self.db.Bigdata.insert_one(dict(item))
+        """
+        该方法用于插入数据
+        """
+        self.insert_db(item)
+
         return item
+
+    def insert_db(self, item):
+        data = dict(item)
+        self.db.article.insert_one(data)  # 向集合books中插入数据
+

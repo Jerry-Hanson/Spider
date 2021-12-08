@@ -4,7 +4,7 @@ SPIDER_MODULES = ['BigdataSpider.spiders']
 NEWSPIDER_MODULE = 'BigdataSpider.spiders'
 
 LOG_LEVEL = "INFO"
-RANDOMIZE_DOWNLOAD_DELAY = True
+DOWNLOAD_DELAY = 0.25
 
 ROBOTSTXT_OBEY = False
 
@@ -15,3 +15,6 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     # 'BigdataSpider.pipelines.BigdataspiderPipeline': 300,
 }
+
+MONGODB_URI = 'mongodb://localhost:27017'
+MONGODB_DB_NAME = 'bigdate'

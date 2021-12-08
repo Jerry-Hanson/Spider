@@ -9,8 +9,9 @@ NEWSPIDER_MODULE = 'TweetScraper.spiders'
 SAVE_TWEET_PATH = './Data/tweet/'
 SAVE_USER_PATH = './Data/user/'
 SAVE_DETAIL_PATH = './Data/detail/'
-RANDOMIZE_DOWNLOAD_DELAY = True
-
+# RANDOMIZE_DOWNLOAD_DELAY = True
+DOWNLOAD_DELAY = 0.25
+MYEXT_ENABLED =True
 from shutil import which
 import os
 
@@ -33,15 +34,19 @@ ITEM_PIPELINES = {
     # 'TweetScraper.pipelines.SavetoMongoPipeline': 100,
 }
 
+EXTENSIONS = {
+   'TweetScraper.extensions.LogStats': 1
+}
+
 SPIDER_MIDDLEWARES = {
     'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware': None
 }
 # settings for mysql
-MYSQL_SERVER = "rm-bp11y14h957ks16573o.mysql.rds.aliyuncs.com"
+MYSQL_SERVER = ""
 MYSQL_DB = "asiafree"
 MYSQL_TABLE = "tweets"  # the table will be created automatically
 MYSQL_USER = "root"  # MySQL user to use (should have INSERT access granted to the Database/Table
-MYSQL_PWD = "Root_123456"  # MySQL user's password
+MYSQL_PWD = ""  # MySQL user's password
 
 # settings for mongodb
 MONGODB_URI = 'mongodb://localhost:27017'

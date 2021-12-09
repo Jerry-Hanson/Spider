@@ -19,7 +19,6 @@ class voac_cn(scrapy.Spider):
 
     def parse(self, response):
 
-        print('hello')
         lis = response.xpath("//li[@class='col-xs-12 col-sm-12 col-md-12 col-lg-12 fui-grid__inner']")
         for li in lis:
             title = li.xpath("./div/div/a/@title").extract_first()

@@ -8,7 +8,7 @@ from BigdataSpider.items import BigdataspiderItem
 
 from datetime import datetime
 
-rand_time = [0.1, 0.2, 0.5, 0.3]
+rand_time = [0.1, 0.2, 0.3]
 
 
 class MainSpider(scrapy.Spider):
@@ -102,11 +102,9 @@ class MainSpider(scrapy.Spider):
         self.cur_page += 1
 
         if self.cur_page > self.max_page:
-            self.Q.put('爬取结束')
             self.crawler.engine.close_spider(self, "关闭spider-1")
         # 控制爬取页数
         if self.cur_page >= self.finished_page and self.use_page:
-            self.Q.put('爬取结束')
             self.crawler.engine.close_spider(self, "关闭spider-2")
 
         yield scrapy.Request(url=self.base_url.format(self.cur_page),

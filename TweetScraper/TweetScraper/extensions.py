@@ -41,7 +41,7 @@ class LogStats:
         prate = (pages - self.pagesprev) * self.multiplier
         self.pagesprev, self.itemsprev = pages, items
 
-        msg = f"Crawled {pages} pages (at {prate} pages/min),scraped {items} items (at {irate} items/min)"
+        msg = f"已爬取 {pages} pages (at {prate} pages/min),抓取 {items} items (at {irate} items/min)"
         spider.Q.put(msg)
 
     def spider_closed(self, spider, reason):

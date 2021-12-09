@@ -240,7 +240,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_20.addLayout(self.horizontalLayout_20)
         self.tabWidget.addTab(self.tab_2, "")
 
-        # tab widget 3
+        # tab widget 3 美国之声
         self.tab_3 = QtWidgets.QWidget()
         self.tab_3.setObjectName("tab_3")
         self.verticalLayout_21 = QtWidgets.QVBoxLayout(self.tab_3)
@@ -459,7 +459,7 @@ class Ui_MainWindow(object):
         self.stop4.setEnabled(False)
         self.lineEdit_gjc2.setEnabled(False)
         self.lineEdit_gjc4.setEnabled(False)
-        self.lineEdit_gjc3.setEnabled(False)
+        self.lineEdit_gjc3.setEnabled(True)
         self.spinBox.setEnabled(False)
         # self.spinBox_2.setEnabled(False)
         self.spinBox_3.setEnabled(False)
@@ -525,8 +525,11 @@ class Ui_MainWindow(object):
         elif spider_name == "tweet":
             keyword = self.lineEdit_gjc1.text()
             date = self.timeEdit_2.text()
-
             process_args = (keyword, date, Q, dbInfo)
+
+        elif spider_name == "voa":
+            keyword = self.lineEdit_gjc3.text()
+            process_args = (keyword, Q, dbInfo)
 
         else:
             # TODO 其他爬虫的定制化启动

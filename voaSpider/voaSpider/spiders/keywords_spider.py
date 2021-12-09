@@ -1,15 +1,25 @@
 import scrapy
+import urllib
 
 from ..items import VoaspiderItem
 
-class voas_fg(scrapy.Spider):
-    name = 'voas_fg'
+
+class keywords_spider(scrapy.Spider):
+    def __init__(self, keyword, dbInfo):
+        self.keyword = keyword
+        self.dbInfo = dbInfo
+        keyword_encode = urllib.parse.quote(self.keyword)
+        self.start_urls = ['https://www.voachinese.com/s?k={}&tab=news&pi={}&r=any&pp=50'.format(keyword_encode, i) for
+                           i in
+                           range(100)]
+
+        super(keywords_spider, self).__init__()
+
+    name = "keyword_spider"
     allowed_domains = ['www.voachinese.com/']
 
-    start_urls = ['https://www.voachinese.com/s?k=%E5%8F%8D%E5%85%B1%E8%A8%80%E8%AE%BA&tab=all&pi={}&r=any&pp=50'.format(i) for i in range(100)]
-
-
     def parse(self, response):
+
         lis = response.xpath("//li[@class='col-xs-12 col-sm-12 col-md-12 col-lg-12 fui-grid__inner']")
         for li in lis:
             title = li.xpath("./div/div/a/@title").extract_first()
@@ -19,7 +29,7 @@ class voas_fg(scrapy.Spider):
                 date = li.xpath("./div/div/span/text()").extract_first()
                 item['date'] = date
                 href = li.xpath("./div/div/a/@href").extract_first()
-                href = "https://www.voachinese.com"+href
+                href = "https://www.voachinese.com" + href
                 item['href'] = href
                 yield scrapy.Request(href, callback=self.parse_detail, dont_filter=True, meta={"item": item})
 
@@ -37,4 +47,3 @@ class voas_fg(scrapy.Spider):
                 str1 = str1 + i
             item['message'] = str1
             yield item
-

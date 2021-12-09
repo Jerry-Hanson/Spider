@@ -23,6 +23,6 @@ def start_crawl(*args):
 
     os.chdir(base_path)
 
-
-if __name__ == "__main__":
-    start_crawl()
+#
+# if __name__ == "__main__":
+#     start_crawl()

@@ -5,17 +5,7 @@ from ..items import VoaspiderItem
 class voas_fcn(scrapy.Spider):
     name = 'voas_fcn'
     allowed_domains = ['www.voachinese.com/']
-    #网站可进行修改，xpath结构相同
-    #台湾 https://www.voachinese.com/z/1769?p={}
-    #start_urls = ['https://www.voachinese.com/z/1769?p={}'.format(i) for i in range(100)]
-    #港澳 https://www.voachinese.com/z/1755?p={}
-    #start_urls = ['https://www.voachinese.com/z/1755?p={}'.format(i) for i in range(100)]
-    #美中 https://www.voachinese.com/z/1776?p={}
-    #start_urls = ['https://www.voachinese.com/z/1776?p={}'.format(i) for i in range(100)]
-    #中国 https://www.voachinese.com/z/1757?p={}
-    # start_urls = ['https://www.voachinese.com/z/1757?p={}'.format(i) for i in range(100)]
-    #关键词 中国 https://www.voachinese.com/s?k=%E4%B8%AD%E5%9B%BD&tab=news&pi={}&r=any&pp=50
-    #start_urls = ['https://www.voachinese.com/s?k=%E4%B8%AD%E5%9B%BD&tab=news&pi={}&r=any&pp=50'.format(i) for i in range(100)]
+
     #关键词 反中国 https://www.voachinese.com/s?k=%E5%8F%8D%E4%B8%AD%E5%9B%BD&tab=all&pi={}&r=any&pp=50
     start_urls = ['https://www.voachinese.com/s?k=%E5%8F%8D%E4%B8%AD%E5%9B%BD&tab=all&pi={}&r=any&pp=50'.format(i) for i in range(100)]
 

@@ -459,7 +459,7 @@ class Ui_MainWindow(object):
         self.lineEdit_gjc4.setEnabled(False)
         self.lineEdit_gjc3.setEnabled(False)
         self.spinBox.setEnabled(False)
-        self.spinBox_2.setEnabled(False)
+        # self.spinBox_2.setEnabled(False)
         self.spinBox_3.setEnabled(False)
         self.timeEdit_2.setEnabled(False)
         self.timeEdit_4.setEnabled(False)
@@ -514,7 +514,8 @@ class Ui_MainWindow(object):
 
         elif spider_name == "asia":
             year, month, day = self.timeEdit_3.date().getDate()
-            process_args = (year, month, Q, dbInfo)
+            page = self.spinBox_2.text()
+            process_args = (year, month, page, Q, dbInfo)
 
         elif spider_name == "tweet":
             keyword = self.lineEdit_gjc1.text()

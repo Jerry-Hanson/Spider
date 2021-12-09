@@ -46,7 +46,6 @@ class TweetScraper(CrawlSpider):
             f'&tweet_search_mode=live'
         )
         self.url = self.url + '&q={query}'
-        print(query)
         self.query = query
         self.num_search_issued = 0
         # regex for finding next cursor

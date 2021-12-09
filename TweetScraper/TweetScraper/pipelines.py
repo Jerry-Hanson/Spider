@@ -139,9 +139,8 @@ class SavetoMongoPipeline(object):
         """
         该方法用于连接数据库
         """
-        db_url = spider.settings.get('MONGODB_URI', 'mongodb://localhost:27017')
-        db_name = spider.settings.get('MONGODB_DB_NAME', 'scrapy_default')
-
+        db_url = spider.dbInfo['dbIp']
+        db_name = spider.dbInfo['dbName']
         self.db_client = MongoClient(db_url)
         self.db = self.db_client[db_name]
 

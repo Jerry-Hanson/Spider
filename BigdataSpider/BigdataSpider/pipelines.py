@@ -15,8 +15,8 @@ class BigdataspiderPipeline:
         该方法用于连接数据库
         """
         #get(key,default)
-        db_url = spider.settings.get('MONGODB_URI', 'mongodb://localhost:27017')
-        db_name = spider.settings.get('MONGODB_DB_NAME', 'bigdate')
+        db_url = spider.dbInfo['dbIp']
+        db_name = spider.dbInfo['dbName']
 
         self.db_client = MongoClient(db_url)
         self.db = self.db_client[db_name]

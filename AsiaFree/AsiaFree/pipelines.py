@@ -1,10 +1,3 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-
-
-# useful for handling different item types with a single interface
 import pymysql
 from pymongo import MongoClient
 
@@ -52,8 +45,8 @@ class asiaFreeMongoPipline:
         该方法用于连接数据库
         """
         #get(key,default)
-        db_url = spider.settings.get('MONGODB_URI', 'mongodb://localhost:27017')
-        db_name = spider.settings.get('MONGODB_DB_NAME', 'scrapy_default')
+        db_url = spider.dbInfo['dbIp']
+        db_name = spider.dbInfo['dbName']
 
         self.db_client = MongoClient(db_url)
         self.db = self.db_client[db_name]

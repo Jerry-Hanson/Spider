@@ -119,7 +119,9 @@ class Ui_MainWindow(object):
         self.label_time1 = QtWidgets.QLabel(self.tab)
         self.label_time1.setObjectName("label_time1")
         self.horizontalLayout_4.addWidget(self.label_time1)
-        self.timeEdit_2 = QtWidgets.QTimeEdit(self.tab)
+        self.timeEdit_2 = QtWidgets.QDateEdit(self.tab)
+        self.timeEdit_2.setDisplayFormat("yyyy-MM-dd")
+        self.timeEdit_2.setDate(QDate.currentDate())
         self.timeEdit_2.setObjectName("timeEdit_2")
         self.horizontalLayout_4.addWidget(self.timeEdit_2)
         self.horizontalLayout_4.setStretch(1, 1)
@@ -417,7 +419,7 @@ class Ui_MainWindow(object):
         self.label_port.setText(_translate("MainWindow", "代理端口"))
         self.label_gjc1.setText(_translate("MainWindow", "爬取内容关键词："))
         self.label_number1.setText(_translate("MainWindow", "爬取数量（条）："))
-        self.label_time1.setText(_translate("MainWindow", "爬取日期："))
+        self.label_time1.setText(_translate("MainWindow", "按时间爬取(日)："))
         self.start1.setText(_translate("MainWindow", "开始"))
         self.stop1.setText(_translate("MainWindow", "停止"))
         self.label_logo1.setText(_translate("MainWindow", "运行日志"))
@@ -441,7 +443,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "美国之音"))
         self.label_gjc4.setText(_translate("MainWindow", "爬取内容关键词："))
         self.label_number4.setText(_translate("MainWindow", "按页数爬取："))
-        self.label_time4.setText(_translate("MainWindow", "按时间爬取(月)："))
+        self.label_time4.setText(_translate("MainWindow", "按时间爬取(日)："))
         self.start4.setText(_translate("MainWindow", "开始"))
         self.stop4.setText(_translate("MainWindow", "停止"))
         self.label_logo4.setText(_translate("MainWindow", "运行日志"))
@@ -461,8 +463,11 @@ class Ui_MainWindow(object):
         self.spinBox.setEnabled(False)
         # self.spinBox_2.setEnabled(False)
         self.spinBox_3.setEnabled(False)
-        self.timeEdit_2.setEnabled(False)
+        # self.timeEdit_2.setEnabled(False)
         self.timeEdit_4.setEnabled(False)
+        self.lineEdit_user.setEnabled(False)
+        self.lineEdit_passward.setEnabled(False)
+
         # 利用partial偏函数固定spider_name等参数来扩展启动函数,
         self.start1.clicked.connect(
             partial(self.create_process_and_start, spider_name='tweet', start_button=self.start1,
@@ -497,11 +502,11 @@ class Ui_MainWindow(object):
         setattr(self, queue_name, Manager().Queue())
         Q = getattr(self, queue_name, None)
 
-        dbIp = self.lineEdit_ip.text()
+        dbIp = self.lineEdit_ip.text() if self.lineEdit_ip.text() != '' else 'mongodb://localhost:27017'
         dbUser = self.lineEdit_user.text()
         dbPassword = self.lineEdit_passward.text()
-        dbName = self.lineEdit_dbname.text()
-        port = self.lineEdit_port.text()
+        dbName = self.lineEdit_dbname.text() if self.lineEdit_ip.text() != '' else 'antiChina_scrapy'
+        port = self.lineEdit_port.text() if self.lineEdit_port.text() != '' else '7890'
         # print(dbIp, dbUser, dbPassword, dbName, dbtName)
         dbInfo = {"dbIp": dbIp, "dbUser": dbUser, "dbPassword": dbPassword,
                   "dbName": dbName, "port": port}
@@ -519,7 +524,9 @@ class Ui_MainWindow(object):
 
         elif spider_name == "tweet":
             keyword = self.lineEdit_gjc1.text()
-            process_args = (keyword, Q, dbInfo)
+            date = self.timeEdit_2.text()
+
+            process_args = (keyword, date, Q, dbInfo)
 
         else:
             # TODO 其他爬虫的定制化启动

@@ -48,6 +48,3 @@ MYSQL_TABLE = "tweets"  # the table will be created automatically
 MYSQL_USER = "root"  # MySQL user to use (should have INSERT access granted to the Database/Table
 MYSQL_PWD = ""  # MySQL user's password
 
-# settings for mongodb
-MONGODB_URI = 'mongodb://localhost:27017'
-MONGODB_DB_NAME = 'twitter'

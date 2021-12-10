@@ -9,7 +9,7 @@ class keywords_spider(scrapy.Spider):
         self.keyword = keyword
         self.dbInfo = dbInfo
         keyword_encode = urllib.parse.quote(self.keyword)
-        self.start_urls = ['https://www.voachinese.com/s?k={}&tab=news&pi={}&r=any&pp=50'.format(keyword_encode, i) for
+        self.start_urls = ['https://www.voachinese.com/s?k={}&tab=all&pi={}&r=month&pp=50'.format(keyword_encode, i) for
                            i in
                            range(100)]
 

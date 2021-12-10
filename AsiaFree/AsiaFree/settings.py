@@ -19,7 +19,7 @@ DOWNLOADER_MIDDLEWARES = {
 }
 
 ITEM_PIPELINES = {
-    # 'AsiaFree.pipelines.asiaFreeMongoPipline': 300,
+    'AsiaFree.pipelines.asiaFreeMongoPipline': 300,
 }
 
 MONGODB_URI = 'mongodb://localhost:27017'

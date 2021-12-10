@@ -7,13 +7,12 @@
 # WARNING! All changes made in this file will be lost!
 
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 
 import sys
 
 # add module path
 from PyQt5.QtCore import QThread, QDate
-from PyQt5.QtWidgets import QButtonGroup
 
 sys.path.append(sys.path[0] + '/BigdataSpider')
 sys.path.append(sys.path[0] + '/AsiaFree')

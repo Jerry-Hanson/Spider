@@ -10,5 +10,5 @@ DOWNLOADER_MIDDLEWARES = {
 }
 
 ITEM_PIPELINES = {
-     # 'voaSpider.pipelines.VOAMongoPipline': 100,
+     'voaSpider.pipelines.VOAMongoPipline': 100,
 }

@@ -37,5 +37,5 @@ class BigdataspiderPipeline:
 
     def insert_db(self, item):
         data = dict(item)
-        self.db.article.insert_one(data)  # 向集合books中插入数据
+        self.db.bigDateArticle.insert_one(data)  # 向集合books中插入数据
 

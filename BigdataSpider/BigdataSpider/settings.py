@@ -13,7 +13,7 @@ DOWNLOADER_MIDDLEWARES = {
 }
 
 ITEM_PIPELINES = {
-    # 'BigdataSpider.pipelines.BigdataspiderPipeline': 300,
+    'BigdataSpider.pipelines.BigdataspiderPipeline': 300,
 }
 
 MONGODB_URI = 'mongodb://localhost:27017'

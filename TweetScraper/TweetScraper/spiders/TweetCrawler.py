@@ -103,14 +103,14 @@ class TweetScraper(CrawlSpider):
         driver = response.meta['driver']
         try:
             self.cookies = driver.get_cookies()
-            # self.x_guest_token = driver.get_cookie('gt')['value']
+            self.x_guest_token = driver.get_cookie('gt')['value']
             # self.x_csrf_token = driver.get_cookie('ct0')['value']
         except:
             self.Q.put('cookies are not updated!')
 
         self.headers = {
             'authorization': 'Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA',
-            # 'x-guest-token': self.x_guest_token,
+            'x-guest-token': self.x_guest_token,
         }
 
     def start_query_request(self, cursor=None):  # 一开始cursor为空
